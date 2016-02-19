@@ -30,11 +30,13 @@ testing (discussed in ECE 322)
   d. If “no”, give examples of where your solution to Assignment 1 would be improved by applying refactoring patterns. Supply a minimum of two different (i.e. different refactoring patterns) as examples.
 
 This assignment is worth 20% of the total marks of the ECE421 assignments; and must be completed in three parts:
-Part 1: Your rationale for your design decision must be completed by Tuesday 1st March @ midnight
-Part 2: Your System Design (written as a set of assertions) must be completed by: Tuesday 1st March @ midnight
-Part 3: Your system must be completed by: Tuesday 1st March @ midnight and must be ready for demonstration in the practical session.
+
+    Part 1: Your rationale for your design decision must be completed by Tuesday 1st March @ midnight
+    Part 2: Your System Design (written as a set of assertions) must be completed by: Tuesday 1st March @ midnight
+    Part 3: Your system must be completed by: Tuesday 1st March @ midnight and must be ready for demonstration in the practical session.
 
 In addition to the practical demonstration, you are required to hand-in:
+
 1. A detailed rational for your augmented decisions with regard to the above design questions.
 2. A list of deviations in the contracts implemented form the contracts specified in Part 1.
 3. A copy of the code
