@@ -1,3 +1,4 @@
+require "filewatcher/mcontracts"
 module Multisort
   module Loader
 
@@ -16,7 +17,7 @@ module Multisort
       #             data_type
     end
 
-    Contract C::And[MContracts::ValidArray, MContracts::ArrayElementsEqualClass] => C::None
+    Contract MContracts::ArrayElementsEqualClass => C::None
     def load_from_data(dataset)
       # loads data set from ruby console.
       # pre         dataset
@@ -24,10 +25,10 @@ module Multisort
       #             data_loaded = true
     end
 
-    Contract C::And[MContracts::DataPresent, MContracts::IsComparable] => C::Boolean
+    Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Boolean
     def sanitise_data
       # checks if data is usable for testing.
-      # exceptions  too large of array, inconsistent array data type, bad data, no comparable for object
+      # exceptions  too large of array, inconsistent array data type, no comparable for object
       # pre         size_limit
       # post        data_type
       #             primitive (if objects are primitive

@@ -10,6 +10,42 @@ module MultiSort
       return true
     end
 
+    class SortData
+      def self.valid? args
+        if @data_loaded != true or @data_cleaned != true or @time_limit == nil
+          raise RuntimeError, "Cannot sort, bad step"
+        end
+        return true
+      end
+      def self.to_s
+        "Cannot sort, bad step"
+      end
+    end
+
+    class TimeLimitNotNil
+      def self.valid? args
+        if @time_limit == nil
+          return false
+        end
+        return true
+      end
+      def self.to_s
+        "No time limit"
+      end
+    end
+
+    class ValidArraySize
+      def self.valid? args
+        if @data.length >= 100000
+          return false
+        end
+        return true
+      end
+      def self.to_s
+        "Too large array presented"
+      end
+    end
+
     class DataPresent
       def self.valid? args
         if @data == nil
@@ -19,15 +55,6 @@ module MultiSort
       end
       def self.to_s
         "No data present"
-      end
-    end
-
-    class ValidArray
-      def self.valid? args
-        return false
-      end
-      def self.to_s
-        "Invalid array structure provided"
       end
     end
 
@@ -59,8 +86,8 @@ module MultiSort
     end
 
     class NilArray
-      def self.valid? array
-        if array == nil or array == "" or array == []
+      def self.valid? @data
+        if @data == nil or @data == "" or @data == []
           return false
         end
         return true
@@ -71,9 +98,9 @@ module MultiSort
     end
 
     class ArrayElementsEqualClass
-      def self.valid? array
-        array.each do |element|
-          if !element.is_a?(array[0].class)
+      def self.valid? @data
+        @data.each do |element|
+          if !element.is_a?(@data[0].class)
             return false
           end
         end

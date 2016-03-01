@@ -1,5 +1,9 @@
+require "filewatcher/mcontracts"
 module Multisort
   module Sorter
+
+    include Contracts::Core
+    C = Contracts
 
     # Contract
     def main_sort
@@ -11,7 +15,7 @@ module Multisort
       #           time_limit
     end
 
-    # Contract
+    Contract MContracts::TimeLimitNotNil => C::None
     def watchdog
       # task timer
       # ends process if watchdog value is passed
