@@ -1,10 +1,8 @@
-require “thread”
-
 module Multisort
   module Sorter
 
     # Contract
-    def main_sort
+    def main_sort(data, time)
       # main sort of process
       # delegation and tasks presented here
       # pre       data_loaded = true
@@ -15,7 +13,7 @@ module Multisort
       
       mainBucket = Array.new()
       build_buckets(data)
-      sortingThread = Thread.new{thread_handler(data)}
+      sortingThread = Thread.new{thread_handler}
       watchdogThread = Thread.new{watchdog(time)}
       
       sortingThread.abort_on_exception = true
@@ -25,6 +23,8 @@ module Multisort
       if sortingThread == "dead"
           Thread.list.each{|t| Thread.kill(t)}
       end
+      
+      puts mainBucket
     end
 
     # Contract
@@ -52,11 +52,11 @@ module Multisort
       
       # Handles the exception if there is an odd number of values in the dataset.
       if dataclone.length == 1
-          mainBucket.pushArray.new(dataclone.shift))
+          mainBucket.pushArray.new(dataclone.shift)
       end
     end
 
-    def thread_handler(data)
+    def thread_handler
       # given initial data input, handles thread operations with thread_sort and combine_bucket
       # pre       data
       # post      completed thread operation
@@ -131,7 +131,7 @@ module Multisort
     def merge_sorted_arrays(array1, array2)
       combinedArray = Array.new
       
-      while !array1.empty? || !array2.empty?
+      while (!array1.empty? || !array2.empty?)
         if array1.first >= array2.first
           combinedArray.push(array1.shift)
         else
