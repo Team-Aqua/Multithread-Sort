@@ -1,7 +1,11 @@
+require "filewatcher/mcontracts"
 module Multisort
   module Print
 
-    # Contract
+    include Contracts::Core
+    C = Contracts
+
+    Contract C::And[MContracts::DataPresent, MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::None
     def write_to_file(filepath)
       # writes data to file
       # only usable if @primitive = true
@@ -10,7 +14,7 @@ module Multisort
       #             primitive = true
     end
 
-    # Contract
+    Contract MContracts::DataPresent => C::None
     def print
       # returns data to console
       # lets users access array

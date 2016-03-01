@@ -10,12 +10,33 @@ module MultiSort
       return true
     end
 
+    class DataPresent
+      def self.valid? args
+        if @data == nil
+          return false
+        end
+        return true
+      end
+      def self.to_s
+        "No data present"
+      end
+    end
+
+    class ValidArray
+      def self.valid? args
+        return false
+      end
+      def self.to_s
+        "Invalid array structure provided"
+      end
+    end
+
     class ValidYAML
       def self.valid? args
         return false
       end
       def self.to_s
-        "TODO"
+        "Invalid YAML structure provided"
       end
     end
 
@@ -24,7 +45,16 @@ module MultiSort
         return false
       end
       def self.to_s
-        "TODO"
+        "Invalid JSON structure"
+      end
+    end
+
+    class ValidCSV
+      def self.valid? args
+        return false
+      end
+      def self.to_s
+        "Invalid CSV structure"
       end
     end
 
@@ -36,7 +66,7 @@ module MultiSort
         return true
       end
       def self.to_s
-        "TODO"
+        "Nil array structure passed, reached EOF"
       end
     end
 
@@ -50,16 +80,7 @@ module MultiSort
         return true
       end
       def self.to_s
-        "TODO"
-      end
-    end
-
-    class ValidYAML
-      def self.valid? args
-        return false
-      end
-      def self.to_s
-        "TODO"
+        "Array elements of different class, can't sort"
       end
     end
 
@@ -69,6 +90,9 @@ module MultiSort
           return true
         end
         return false
+      end
+      def self.to_s
+        "Array elements do not have comparable, can't sort"
       end
     end
 
@@ -82,11 +106,17 @@ module MultiSort
         end
         return true
       end
+      def self.to_s
+        "Lack permissions to access file"
+      end
     end
 
     class ValidFilePath
       def self.valid? filepath
         File.stat(filepath).file?
+      end
+      def self.to_s
+        "Invalid file path issued"
       end
     end
 
