@@ -13,6 +13,9 @@ module Multisort
     include Multisort::Sorter 
     include Multisort::MContracts
 
+    invariant(@time_limit) { @time_limit >= 0}
+    invariant(@size_limit) { @size_limit >= 0}
+
     attr_reader :data, :time_limit, :size_limit, :sort_status, :data_loaded, :data_cleaned, :data_type, :primitive
     
     def initialize()  
