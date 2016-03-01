@@ -11,6 +11,7 @@ module Multisort
     include Multisort::Loader
     include Multisort::Print 
     include Multisort::Sorter 
+    include Multisort::MContracts
 
     attr_reader :data, :time_limit, :size_limit, :sort_status, :data_loaded, :data_cleaned, :data_type, :primitive
     
