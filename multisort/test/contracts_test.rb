@@ -17,9 +17,9 @@ class MContractsTest < Minitest::Test
     assert !MultiSort::MContracts::argument_validation([1, 1, '1'],[MultiSort::MContracts::ArrayElementsEqualClass])
     assert !MultiSort::MContracts::argument_validation([1, 1, Array.new],[MultiSort::MContracts::ArrayElementsEqualClass])
     assert MultiSort::MContracts::argument_validation([Array.new, Array.new, Array.new],[MultiSort::MContracts::ArrayElementsEqualClass])
-
     assert MultiSort::MContracts::argument_validation(1,[MultiSort::MContracts::IsComparable])
     assert MultiSort::MContracts::argument_validation('a',[MultiSort::MContracts::IsComparable])
+
   end
 
   def test_file_permission

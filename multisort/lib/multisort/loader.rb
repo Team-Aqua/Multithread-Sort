@@ -5,7 +5,7 @@ module Multisort
     include Contracts::Core
     C = Contracts
 
-    Contract C::And[MContracts::ValidCSV, MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::None
+    Contract C::And[C::Or[MContracts::ValidCSV, MContracts::ValidJSON], MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::None
     # ignore MContracts::ValidJSON, MContracts::ValidYAML
     def load_from_file(filepath)
       # loads data set from file. Checks if filepath is clear, reads data.
