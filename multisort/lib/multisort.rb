@@ -1,7 +1,7 @@
 require "multisort/loader"
 require "multisort/print"
-require "multisort/thread"
 require "multisort/version"
+require "thread"
 
 module Multisort
 
