@@ -5,7 +5,7 @@ module Multisort
     include Contracts::Core
     C = Contracts
 
-    Contract C::And[MContracts::DataPresent, MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::None
+    Contract C::And[MContracts::ValidFilePath, MContracts::ValidFilePermissions, MContracts::DataPresent] => C::None
     def write_to_file(filepath)
       # writes data to file
       # only usable if @primitive = true

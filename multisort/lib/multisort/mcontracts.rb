@@ -25,6 +25,7 @@ module MultiSort
     class TimeLimitNotNil
       def self.valid? args
         if @time_limit == nil
+          raise RuntimeError, "No time limit"
           return false
         end
         return true
@@ -37,6 +38,7 @@ module MultiSort
     class ValidArraySize
       def self.valid? args
         if @data.length >= 100000
+          raise RuntimeError, "Too large array presented"
           return false
         end
         return true
@@ -49,6 +51,7 @@ module MultiSort
     class DataPresent
       def self.valid? args
         if @data == nil
+          raise RuntimeError, "No data present"
           return false
         end
         return true
@@ -58,6 +61,7 @@ module MultiSort
       end
     end
 
+    # dev: parsing YAML contract
     class ValidYAML
       def self.valid? args
         return false
@@ -67,6 +71,7 @@ module MultiSort
       end
     end
 
+    # dev: parsing JSON contract
     class ValidJSON
       def self.valid? args
         return false
@@ -76,6 +81,7 @@ module MultiSort
       end
     end
 
+    # dev: parsing CSV contract
     class ValidCSV
       def self.valid? args
         return false
@@ -88,6 +94,7 @@ module MultiSort
     class NilArray
       def self.valid? @data
         if @data == nil or @data == "" or @data == []
+          raise RuntimeError, "Nil array structure passed, reached EOF"
           return false
         end
         return true
@@ -101,6 +108,7 @@ module MultiSort
       def self.valid? @data
         @data.each do |element|
           if !element.is_a?(@data[0].class)
+            raise TypeError, "Array elements of different class, can't sort"
             return false
           end
         end
@@ -116,6 +124,7 @@ module MultiSort
         if obj.respond_to?(:<=>)
           return true
         end
+        raise RuntimeError, "Array elements do not have comparable, can't sort"
         return false
       end
       def self.to_s
@@ -129,6 +138,7 @@ module MultiSort
         stats = File.stat(filename)
         # sprintf("%o", stats.mode)          #=> "100644"
         if stats.mode != "100644"
+          raise IOError, "Lack permissions to access file"
           return false
         end
         return true
