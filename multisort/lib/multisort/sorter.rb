@@ -40,7 +40,7 @@ module Multisort
       end
     end
 
-    # Contract
+    Contract C::Num => C::None
     def build_buckets(data)
       # main function, goal is to build buckets using data
       # each initial bucket has 2 data points
@@ -88,7 +88,7 @@ module Multisort
       end
     end
 
-    # Contract
+    Contract C::Num => C::None
     def thread_sort(rank)
       # thread sort operations parsed here
       # Exceptions: thread-based exceptions
@@ -105,7 +105,7 @@ module Multisort
       $semaphore.unlock
     end
 
-    # Contract
+    Contract C::Num => C::None
     def combine_bucket(rank)
       # combines bucket with another bucket
       # combines data, then performs thread_sort again
@@ -121,6 +121,7 @@ module Multisort
       $semaphore.unlock
     end
     
+    Contract C::ArrayOf[C::Num] => C::Any
     def quick_sort(array)
         sl = array.clone
         return sl if sl.size <= 1
@@ -129,6 +130,7 @@ module Multisort
         quick_sort(left) + [pivot] + quick_sort(right)
     end
     
+    Contract C::ArrayOf[C::Num], C::ArrayOf[C::Num] => C::ArrayOf[C::Num]
     def merge_sorted_arrays(array1, array2)
       combinedArray = Array.new
       
