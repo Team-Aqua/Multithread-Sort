@@ -5,7 +5,7 @@ module Multisort
     include Contracts::Core
     C = Contracts
 
-    # Contract
+    Contract MContracts::SortData => C::None
     def main_sort
       # main sort of process
       # delegation and tasks presented here
