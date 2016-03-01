@@ -6,7 +6,7 @@ require 'multisort/version'
 Gem::Specification.new do |spec|
   spec.name          = "multisort"
   spec.version       = Multisort::VERSION
-  spec.authors       = ["Anson Li"]
+  spec.authors       = ["Anson Li, Quentin Lautischer, Aaron Plamondon"]
   spec.email         = ["ansonli.94@gmail.com"]
 
   spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
