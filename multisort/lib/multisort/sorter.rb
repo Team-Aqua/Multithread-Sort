@@ -11,7 +11,7 @@ module Multisort
       #           time_limit
       $semaphore = Mutex.new
       
-      mainBucket = Array.new()
+      $mainBucket = Array.new()
       build_buckets(data)
       sortingThread = Thread.new{thread_handler}
       watchdogThread = Thread.new{watchdog(time)}
@@ -24,7 +24,7 @@ module Multisort
           Thread.list.each{|t| Thread.kill(t)}
       end
       
-      puts mainBucket
+      puts $mainBucket
     end
 
     # Contract
@@ -47,12 +47,12 @@ module Multisort
       # post      bucket containing data
       dataclone = data.clone
       while dataclone.length > 1 do
-          mainBucket.push(dataclone.shift(2))
+          $mainBucket.push(dataclone.shift(2))
       end
       
       # Handles the exception if there is an odd number of values in the dataset.
       if dataclone.length == 1
-          mainBucket.pushArray.new(dataclone.shift)
+          $mainBucket.push(Array.new(dataclone.shift))
       end
     end
 
@@ -61,10 +61,10 @@ module Multisort
       # pre       data
       # post      completed thread operation
       
-      while mainBuckets.count != 1
+      while $mainBucket.count != 1
         # Sort sub buckets in main bucket.
         threads = Array.new
-        (0..(mainBucket.count-1)).each do |rank|
+        (0..($mainBucket.count-1)).each do |rank|
           threads << Thread.new do
             thread_sort(rank)
           end
@@ -76,14 +76,14 @@ module Multisort
         # combine sub buckets
         threads = Array.new
         threadBuckets = Array.new()
-        (0..(mainBucket.count/2).floor-1).each do |rank|
+        (0..($mainBucket.count/2).floor-1).each do |rank|
           threads << Thread.new do
             combine_bucket(rank)
           end
         end
       
         threads.each(&:join)
-        mainBucket = threadBuckets
+        $mainBucket = threadBuckets
       end
     end
 
@@ -95,12 +95,12 @@ module Multisort
       # post      sorted data
     
       # sort sub bucket.
-      subBucket = mainBucket[rank]
-      quick_sort(mainBucket[rank])
+      subBucket = $mainBucket[rank]
+      quick_sort($mainBucket[rank])
     
-      # write bucket back to mainBucket
+      # write bucket back to $mainBucket
       $semaphore.lock
-        mainBucket[rank] = subBucket
+        $mainBucket[rank] = subBucket
       $semaphore.unlock
     end
 
@@ -112,7 +112,7 @@ module Multisort
       # post      single sorted bucket
       
       # combine buckets
-      combinedBucket = merge_sorted_arrays(mainBucket[2*rank], mainBucket[(2*rank)+1])
+      combinedBucket = merge_sorted_arrays($mainBucket[2*rank], $mainBucket[(2*rank)+1])
       
       # Write combined bucket to bucket list
       $semaphore.lock
