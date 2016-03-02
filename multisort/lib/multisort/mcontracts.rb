@@ -150,7 +150,9 @@ module MultiSort
 
     class ValidFilePath
       def self.valid? filepath
-        File.stat(filepath).file?
+        if !File.stat(filepath).file?
+          raise IOError, "Invalid file path issued"
+          return false
       end
       def self.to_s
         "Invalid file path issued"
