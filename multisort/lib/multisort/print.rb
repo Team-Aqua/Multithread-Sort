@@ -1,7 +1,5 @@
-require "multisort/mcontracts"
 module Multisort
   module Print
-
     include Contracts::Core
     C = Contracts
 

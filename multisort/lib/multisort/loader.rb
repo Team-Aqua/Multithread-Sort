@@ -1,8 +1,5 @@
-require "multisort/mcontracts"
-
 module Multisort
   module Loader
-
     include Contracts::Core
     C = Contracts
 
@@ -26,7 +23,7 @@ module Multisort
       #             data_loaded = true
     end
 
-    Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Boolean
+    Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Bool
     def sanitise_data
       # checks if data is usable for testing.
       # exceptions  too large of array, inconsistent array data type, no comparable for object

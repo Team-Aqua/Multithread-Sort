@@ -1,4 +1,4 @@
-module MultiSort
+module Multisort
   module MContracts
 
     def self.argument_validation(args, contracts)

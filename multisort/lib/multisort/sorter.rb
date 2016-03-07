@@ -1,6 +1,7 @@
-#require "multisort/mcontracts"
 module Multisort
   module Sorter
+    include Contracts::Core
+    C = Contracts
 
     Contract C::And[MContracts::SortData] => C::None
     def main_sort(data, time)
