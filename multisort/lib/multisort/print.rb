@@ -1,4 +1,4 @@
-require "filewatcher/mcontracts"
+require "multisort/mcontracts"
 module Multisort
   module Print
 

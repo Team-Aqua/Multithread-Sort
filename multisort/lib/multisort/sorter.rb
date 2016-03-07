@@ -1,4 +1,4 @@
-require "filewatcher/mcontracts"
+#require "multisort/mcontracts"
 module Multisort
   module Sorter
 
@@ -22,7 +22,7 @@ module Multisort
       watchdog.join
       
       if sortingThread == "dead"
-          Thread.list.each{|t| Thread.kill(t)}
+        Thread.list.each{|t| Thread.kill(t)}
       end
       
       puts mainBucket
@@ -36,7 +36,7 @@ module Multisort
       # pre       time_limit
       sleep time
       if sortingThread.alive?
-          Thread.kill(sortingThread)
+        Thread.kill(sortingThread)
       end
     end
 

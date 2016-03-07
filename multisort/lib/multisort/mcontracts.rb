@@ -92,8 +92,8 @@ module MultiSort
     end
 
     class NilArray
-      def self.valid? @data
-        if @data == nil or @data == "" or @data == []
+      def self.valid? data
+        if data == nil or data == "" or data == []
           raise RuntimeError, "Nil array structure passed, reached EOF"
           return false
         end
@@ -105,9 +105,9 @@ module MultiSort
     end
 
     class ArrayElementsEqualClass
-      def self.valid? @data
-        @data.each do |element|
-          if !element.is_a?(@data[0].class)
+      def self.valid? data
+        data.each do |element|
+          if !element.is_a?(data[0].class)
             raise TypeError, "Array elements of different class, can't sort"
             return false
           end
@@ -153,6 +153,7 @@ module MultiSort
         if !File.stat(filepath).file?
           raise IOError, "Invalid file path issued"
           return false
+        end
       end
       def self.to_s
         "Invalid file path issued"
