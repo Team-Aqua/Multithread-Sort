@@ -50,7 +50,7 @@ module Multisort
 
     class DataPresent
       def self.valid? args
-        if @data_loaded == false
+        if args.data_loaded == false
           raise RuntimeError, "No data present"
           return false
         end
@@ -84,10 +84,23 @@ module Multisort
     # dev: parsing CSV contract
     class ValidCSV
       def self.valid? args
-        return false
+        return true
       end
       def self.to_s
         "Invalid CSV structure"
+      end
+    end
+
+    class IsPrimitive
+      def self.valid? data
+        if data.is_a?(Fixnum)
+          return true
+        end
+        raise RuntimeError, "Data is not Fixnum"
+        return false
+      end
+      def self.to_s
+        "Data is not Fixnum"
       end
     end
 

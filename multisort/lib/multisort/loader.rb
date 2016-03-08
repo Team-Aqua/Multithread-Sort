@@ -13,6 +13,32 @@ module Multisort
       #             data_loaded = true
       #             primitive = true
       #             data_type
+
+      MContracts::ValidFilePath(filepath)
+      MContracts::ValidFilePermissions(filepath)
+
+      file = File.new(filepath, "r")
+
+      if (filepath.include? ".csv")
+        open(filename) do |csv|
+          csv.each_line do |line|
+            values = line.gsub(/\s+/, "").split(",")
+            values.each do |value|
+              @data.push(value)
+            end
+          end
+        end
+        @data_loaded = true
+      elsif (filepath.include? ".json")
+        @data_loaded = true
+      else
+        file.close
+        raise RuntimeError.new, "Invalid Filetype" 
+      end
+      file.close
+      MContracts::DataPresent(self)
+      MContracts::IsPrimitive(@data.first)
+      return
     end
 
     Contract MContracts::ArrayElementsEqualClass => C::Any

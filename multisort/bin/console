@@ -9,6 +9,6 @@ require "multisort"
 # (If you use this, don't forget to add pry to your Gemfile!)
 # require "pry"
 # Pry.start
-
+d = Multisort::MSDriver.new
 require "irb"
 IRB.start
