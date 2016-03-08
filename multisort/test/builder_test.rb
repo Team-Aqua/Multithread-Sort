@@ -15,7 +15,7 @@ class MBuilderTest < Minitest::Test
     @ms = Multisort::MSDriver.new
     @ms.load_from_data([1,2,3,4,5,6,7,8,9,10])
     assert_output("") {@ms.write_to_file("result.txt")}
-    assert_output("1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ") {@ms.print_data}
+    assert_output("[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]") {@ms.print_data}
   end
 
 end

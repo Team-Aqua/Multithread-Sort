@@ -16,21 +16,25 @@ module Multisort
       MContracts::DataPresent
 
       File.open(filepath, "w") do |f|
-        @data.each { |element| 
+        f.write("Structure: ")
+        f.write(@data_type)
+        f.write("\nArray: [")
+        @data.each_with_index { |element, index| 
           f.write(element)
-          f.write(", ")
+          if index != @data.size - 1
+            f.write(", ")
+          end
         }
+        f.write("]")
       end
+      return nil
     end
 
     Contract MContracts::DataPresent => C::Any
     def print_data
       # returns data to console
       # lets users access array
-      @data.each { |element| 
-        print element
-        print ", "
-      }
+      print @data
       return
     end 
 

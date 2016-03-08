@@ -36,6 +36,8 @@ module Multisort
       #             primitive (if objects are primitive
       #             data_cleaned
       #             boolean
+      
+      @data_type = @data.first.class
       @data_cleaned = true;
       return true
     end
