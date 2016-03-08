@@ -26,6 +26,7 @@ class MSDriver
         @data_type = nil
         @time_limit = 500 # arbitrary time limit set to 500s
         @size_limit = 25000 # arbitrary size limit set to 25000
+        @numberOfThreads = 4
         @primitive = false # discern the type of object sorted
     end
     
