@@ -1,9 +1,10 @@
+require 'bigdecimal'
 module Multisort
   module Loader
     include Contracts::Core
     C = Contracts
 
-    Contract C::And[C::Or[MContracts::ValidCSV, MContracts::ValidJSON], MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::None
+    Contract C::And[C::Or[MContracts::ValidCSV, MContracts::ValidJSON], MContracts::ValidFilePath, MContracts::ValidFilePermissions] => C::Bool
     # ignore MContracts::ValidJSON, MContracts::ValidYAML
     def load_from_file(filepath)
       # loads data set from file. Checks if filepath is clear, reads data.
@@ -13,7 +14,44 @@ module Multisort
       #             data_loaded = true
       #             primitive = true
       #             data_type
+
+      MContracts::ValidFilePath.valid?(filepath)
+      MContracts::ValidFilePermissions.valid?(filepath)
+
+      @data = []
+      file = File.new(filepath, "r")
+      if (filepath.include? ".csv")
+        open(filepath) do |csv|
+          csv.each_line do |line|
+            values = line.gsub(/\s+/, "").split(",")
+            values.each do |value|
+              self.data.push(to_numeric(value))
+            end
+          end
+        end
+        @data_loaded = true
+        MContracts::IsPrimitive.valid?(@data.first)
+      elsif (filepath.include? ".json")
+        @data_loaded = true
+      else
+        file.close
+        raise RuntimeError.new, "Invalid Filetype" 
+        return false
+      end
+      file.close
+      MContracts::DataPresent.valid?(self)
+      return true
     end
+
+    def to_numeric(anything)
+      num = BigDecimal.new(anything.to_s)
+      if num.frac == 0
+        num.to_i
+      else
+        num.to_f
+      end
+    end
+
 
     Contract MContracts::ArrayElementsEqualClass => C::Any
     def load_from_data(dataset)

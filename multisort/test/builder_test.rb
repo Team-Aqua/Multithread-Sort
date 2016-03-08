@@ -11,6 +11,12 @@ class MBuilderTest < Minitest::Test
     assert_equal([1,2,3,4,5,6,7,8,9,10], @ms.data)
   end
 
+  def test_load_from_csv
+    @ms = Multisort::MSDriver.new
+    @ms.load_from_file("test/test_csv.csv")
+    assert_equal(true, @ms.data_loaded)
+  end
+
   def test_print_data
     @ms = Multisort::MSDriver.new
     @ms.load_from_data([1,2,3,4,5,6,7,8,9,10])
