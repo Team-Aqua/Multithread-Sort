@@ -23,14 +23,20 @@ module Multisort
       end
       
       @sortingThread = Thread.new{thread_handler}
+      @sortingThread.abort_on_exception = true
       watchdogThread = Thread.new{watchdog(time)}
       
-      @sortingThread.abort_on_exception = true
       @sortingThread.join
+      
+      if watchdogThread.alive?
+          Thread.kill(watchdogThread)
+      end
       watchdogThread.join
       
-      if @sortingThread == "dead"
-        Thread.list.each{|t| Thread.kill(t)}
+      puts @sortingThread.status
+      if @sortingThread.status ==  "aborting"
+          puts "The thread was kiled and caught"
+          Thread.list.each{|t| Thread.kill(t)}
       end
       
       p @mainBucket
@@ -44,7 +50,7 @@ module Multisort
       # pre       time_limit
       sleep time
       if @sortingThread.alive?
-        Thread.kill(sortingThread)
+        Thread.kill(@sortingThread)
       end
     end
 
