@@ -15,7 +15,7 @@ module Multisort
       
       @mainBucket = Array.new()
       if @data.count > 2
-        build_buckets(@data)
+        build_buckets
       else
         @data = bubble_sort(@data)
         @sort_status = true
@@ -56,12 +56,12 @@ module Multisort
     end
 
     #Contract C::Num => C::None
-    def build_buckets(data)
+    def build_buckets
       # main function, goal is to build buckets using data
       # each initial bucket has 2 data points
       # pre       data loaded
       # post      bucket containing data
-      dataclone = data.clone
+      dataclone = @data.clone
       while dataclone.length > 1 do
         @mainBucket.push(dataclone.shift(2))
       end
