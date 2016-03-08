@@ -62,13 +62,14 @@ module Multisort
       # pre       data loaded
       # post      bucket containing data
       dataclone = @data.clone
-      while dataclone.length > 1 do
-        @mainBucket.push(dataclone.shift(2))
+      sizeOfBuckets = (@data.count/@numberOfThreads).floor
+      while dataclone.length > sizeOfBuckets-1 do
+        @mainBucket.push(dataclone.shift(sizeOfBuckets))
       end
       
       # Handles the exception if there is an odd number of values in the dataset.
-      if dataclone.length == 1
-        @mainBucket.push(Array.new(1, dataclone.shift))
+      dataclone.each do |val|
+        @mainBucket[3].push(val)
       end
     end
 
