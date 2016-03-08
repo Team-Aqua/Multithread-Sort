@@ -1,8 +1,10 @@
 module Multisort
   module Sorter
+    include Contracts::Core
+    C = Contracts
 
-    # Contract
-    def main_sort(data, time)
+    #Contract C::And[MContracts::SortData] => C::None
+    def main_sort
       # main sort of process
       # delegation and tasks presented here
       # pre       data_loaded = true
@@ -11,49 +13,62 @@ module Multisort
       #           time_limit
       $semaphore = Mutex.new
       
-      $mainBucket = Array.new()
-      build_buckets(data)
-      sortingThread = Thread.new{thread_handler}
-      watchdogThread = Thread.new{watchdog(time)}
+      @mainBucket = Array.new()
+      if @data.count > 2
+        build_buckets
+      else
+        @data = bubble_sort(@data)
+        @sort_status = true
+        return
+      end
       
-      sortingThread.abort_on_exception = true
-      sortingThread.join
-      watchdog.join
+      @sortingThread = Thread.new{thread_handler}
+      @sortingThread.abort_on_exception = true
+      watchdogThread = Thread.new{watchdog}
       
-      if sortingThread == "dead"
+      @sortingThread.join
+      
+      if watchdogThread.alive?
+          Thread.kill(watchdogThread)
+      end
+      watchdogThread.join
+      
+      puts @sortingThread.status
+      if @sortingThread.status ==  "aborting"
+          puts "The thread was kiled and caught"
           Thread.list.each{|t| Thread.kill(t)}
       end
       
-      puts $mainBucket
+      @data = @mainBucket.first
+      @sort_status = true
     end
 
-    # Contract
-    def watchdog(time)
+    #Contract MContracts::TimeLimitNotNil => C::None
+    def watchdog
       # task timer
       # ends process if watchdog value is passed
       # watchdog value represented in seconds
       # pre       time_limit
-      sleep time
-      if sortingThread.alive?
-          Thread.kill(sortingThread)
+      sleep @time_limit
+      if @sortingThread.alive?
+        Thread.kill(@sortingThread)
       end
     end
 
-    # Contract
-    def build_buckets(data)
+    #Contract C::Num => C::None
+    def build_buckets
       # main function, goal is to build buckets using data
       # each initial bucket has 2 data points
       # pre       data loaded
       # post      bucket containing data
-      dataclone = data.clone
-      sizeOfBuckets = (@data.count/@numberOfThreads).floor
-      while dataclone.length > sizeOfBuckets-1 do
-          $mainBucket.push(dataclone.shift(sizeOfBuckets))
+      dataclone = @data.clone
+      while dataclone.length > 1 do
+        @mainBucket.push(dataclone.shift(2))
       end
       
       # Handles the exception if there is an odd number of values in the dataset.
-      dataclone.each do |val|
-        $mainBucket[3].push(val)
+      if dataclone.length == 1
+        @mainBucket.push(Array.new(1, dataclone.shift))
       end
     end
 
@@ -62,10 +77,10 @@ module Multisort
       # pre       data
       # post      completed thread operation
       
-      while $mainBucket.count != 1
+      while @mainBucket.count != 1
         # Sort sub buckets in main bucket.
         threads = Array.new
-        (0..($mainBucket.count-1)).each do |rank|
+        (0..(@mainBucket.count-1)).each do |rank|
           threads << Thread.new do
             thread_sort(rank)
           end
@@ -76,19 +91,22 @@ module Multisort
       
         # combine sub buckets
         threads = Array.new
-        threadBuckets = Array.new()
-        (0..($mainBucket.count/2).floor-1).each do |rank|
+        @threadBuckets = Array.new()
+        (0..(@mainBucket.count/2).floor-1).each do |rank|
           threads << Thread.new do
             combine_bucket(rank)
           end
         end
       
         threads.each(&:join)
-        $mainBucket = threadBuckets
+        if @mainBucket.count % 2 == 1
+          @threadBuckets.push(@mainBucket.last)
+        end
+        @mainBucket = @threadBuckets
       end
     end
 
-    # Contract
+    #Contract C::Num => C::None
     def thread_sort(rank)
       # thread sort operations parsed here
       # Exceptions: thread-based exceptions
@@ -96,16 +114,16 @@ module Multisort
       # post      sorted data
     
       # sort sub bucket.
-      subBucket = $mainBucket[rank]
-      quick_sort($mainBucket[rank])
+      subBucket = @mainBucket[rank]
+      bubble_sort(@mainBucket[rank])
     
-      # write bucket back to $mainBucket
+      # write bucket back to @mainBucket
       $semaphore.lock
-        $mainBucket[rank] = subBucket
+        @mainBucket[rank] = subBucket
       $semaphore.unlock
     end
-
-    # Contract
+    
+    #Contract C::Num => C::None
     def combine_bucket(rank)
       # combines bucket with another bucket
       # combines data, then performs thread_sort again
@@ -113,30 +131,42 @@ module Multisort
       # post      single sorted bucket
       
       # combine buckets
-      combinedBucket = merge_sorted_arrays($mainBucket[2*rank], $mainBucket[(2*rank)+1])
+      combinedBucket = merge_sorted_arrays(@mainBucket[2*rank], @mainBucket[(2*rank)+1])
       
       # Write combined bucket to bucket list
       $semaphore.lock
-        threadBuckets.push(combinedBucket)
+        @threadBuckets.push(combinedBucket)
       $semaphore.unlock
     end
     
-    def quick_sort(array)
-        sl = array.clone
-        return sl if sl.size <= 1
-        pivot = sl.pop
-        left, right = sl.partition { |e| e < pivot }
-        quick_sort(left) + [pivot] + quick_sort(right)
+    #Contract C::ArrayOf[C::Num] => C::Any
+    def bubble_sort(array)
+      n = array.length
+      loop do
+        swapped = false
+            
+        (n-1).times do |i|
+          if array[i] > array[i+1]
+            array[i], array[i+1] = array[i+1], array[i]
+            swapped = true
+          end
+        end
+            
+        break if not swapped
+      end
+
+      return array
     end
     
+    #Contract C::ArrayOf[C::Num], C::ArrayOf[C::Num] => C::ArrayOf[C::Num]
     def merge_sorted_arrays(array1, array2)
       combinedArray = Array.new
       
-      while (!array1.empty? || !array2.empty?)
-        if array1.first >= array2.first
+      while (!array1.empty? && !array2.empty?)
+        if array1.first <= array2.first
           combinedArray.push(array1.shift)
         else
-          combinedArray.push(array1.shift)
+          combinedArray.push(array2.shift)
         end
       end
       
