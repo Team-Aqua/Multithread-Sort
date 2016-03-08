@@ -50,7 +50,7 @@ module Multisort
 
     class DataPresent
       def self.valid? args
-        if @data == nil
+        if @data_loaded == false
           raise RuntimeError, "No data present"
           return false
         end

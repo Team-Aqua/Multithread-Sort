@@ -15,12 +15,16 @@ module Multisort
       #             data_type
     end
 
-    Contract MContracts::ArrayElementsEqualClass => C::None
+    Contract MContracts::ArrayElementsEqualClass => C::Any
     def load_from_data(dataset)
       # loads data set from ruby console.
       # pre         dataset
       # post        data
       #             data_loaded = true
+      @data = dataset
+      @data_loaded = true
+      sanitise_data
+      return 
     end
 
     Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Bool
@@ -32,6 +36,8 @@ module Multisort
       #             primitive (if objects are primitive
       #             data_cleaned
       #             boolean
+      @data_cleaned = true;
+      return true
     end
 
   end # Loader
