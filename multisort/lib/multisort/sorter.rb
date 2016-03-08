@@ -4,7 +4,7 @@ module Multisort
     C = Contracts
 
     #Contract C::And[MContracts::SortData] => C::None
-    def main_sort(data, time)
+    def main_sort
       # main sort of process
       # delegation and tasks presented here
       # pre       data_loaded = true
@@ -14,17 +14,17 @@ module Multisort
       $semaphore = Mutex.new
       
       @mainBucket = Array.new()
-      if data.count > 2
-        build_buckets(data)
+      if @data.count > 2
+        build_buckets(@data)
       else
-        @mainBucket = bubble_sort(data)
-        p @mainBucket
+        @data = bubble_sort(@data)
+        @sort_status = true
         return
       end
       
       @sortingThread = Thread.new{thread_handler}
       @sortingThread.abort_on_exception = true
-      watchdogThread = Thread.new{watchdog(time)}
+      watchdogThread = Thread.new{watchdog}
       
       @sortingThread.join
       
@@ -39,16 +39,17 @@ module Multisort
           Thread.list.each{|t| Thread.kill(t)}
       end
       
-      p @mainBucket
+      @data = @mainBucket.first
+      @sort_status = true
     end
 
     #Contract MContracts::TimeLimitNotNil => C::None
-    def watchdog(time)
+    def watchdog
       # task timer
       # ends process if watchdog value is passed
       # watchdog value represented in seconds
       # pre       time_limit
-      sleep time
+      sleep @time_limit
       if @sortingThread.alive?
         Thread.kill(@sortingThread)
       end
@@ -103,8 +104,6 @@ module Multisort
         end
         @mainBucket = @threadBuckets
       end
-      
-      @mainBucket = @mainBucket.first
     end
 
     #Contract C::Num => C::None
