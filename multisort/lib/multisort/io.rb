@@ -1,7 +1,7 @@
 require 'bigdecimal'
 require 'yaml'
 module Multisort
-  module Loader
+  module IO
     include Contracts::Core
     C = Contracts
 
@@ -52,6 +52,43 @@ module Multisort
         num.to_f
       end
     end
+
+    def self.write_to_file(data, filepath)
+      # writes data to file
+      # only usable if @primitive = true
+      # exceptions  bad file path, wrong input method
+      # pre         filepath
+      #             primitive = true
+
+      MContracts::ValidFilePath
+      MContracts::ValidFilePermissions
+      MContracts::DataPresent
+
+      # File.open(filepath, "w") do |f|
+      #   f.write("Structure: ")
+      #   f.write(@data_type)
+      #   f.write("\nArray: [")
+      #   @data.each_with_index { |element, index| 
+      #     f.write(element)
+      #     if index != @data.size - 1
+      #       f.write(", ")
+      #     end
+      #   }
+      #   f.write("]")
+      # end
+      # return nil
+      yaml  = data.to_yaml
+      File.open(filepath, 'w').write(yaml)
+      return yaml
+    end
+
+    Contract MContracts::DataPresent => C::Any
+    def self.print_data
+      # returns data to console
+      # lets users access array
+      print @data
+      return
+    end 
 
   end # Loader
 end # Multisort

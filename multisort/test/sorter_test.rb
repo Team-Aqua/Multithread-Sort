@@ -13,9 +13,9 @@ class SorterTest < Minitest::Test
     assert  [10,21,32,4,53,6,71,8,9,10] == Multisort.sort("test/test_files/test_csv.csv", 20)
     assert  [10.1, 21.2, 32.3, 4.2, 53.3, 6.4, 71.6, 8.8, 9.0, 10.2] == Multisort.sort("test/test_files/test_float_csv.csv", 20)
     
-    assert [1,2] == Multisort.sort([1,2], 20, threadNum=4)
-    assert [1,2] == Multisort.sort([1,2], 20, outputfile="output.csv")
-    assert [1,2] == Multisort.sort([1,2], 20, threadNum=4, outputfile="output.csv")
+    assert [1,2] == Multisort.sort([1,2], 20, threadNum: 4)
+    assert "---\n- 1\n- 2\n" == Multisort.sort([1,2], 20, outputfile: "output.yml")
+    assert "---\n- 1\n- 2\n" == Multisort.sort([1,2], 20, threadNum: 4, outputfile: "output.yml")
   end
   
   def test_sort_int
