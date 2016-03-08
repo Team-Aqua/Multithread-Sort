@@ -2,7 +2,8 @@ module Multisort
   module Sorter
     include Contracts::Core
     C = Contracts
-
+    
+    Thread::abort_on_exception = true
     #Contract C::And[MContracts::SortData] => C::None
     def main_sort
       # main sort of process
@@ -22,8 +23,13 @@ module Multisort
         return
       end
       
-      @sortingThread = Thread.new{thread_handler}
-      @sortingThread.abort_on_exception = true
+      begin
+        @sortingThread = Thread.new{thread_handler}
+      rescue Exception => e
+        puts "EXCEPTION: #{e.inspect}"
+        puts "MESSAGE: #{e.message}"
+      end
+      #@sortingThread.abort_on_exception = true
       watchdogThread = Thread.new{watchdog}
       
       @sortingThread.join
@@ -35,7 +41,7 @@ module Multisort
       
       puts @sortingThread.status
       if @sortingThread.status ==  "aborting"
-          puts "The thread was kiled and caught"
+          puts "The thread was killed and caught"
           Thread.list.each{|t| Thread.kill(t)}
       end
       
@@ -51,7 +57,7 @@ module Multisort
       # pre       time_limit
       sleep @time_limit
       if @sortingThread.alive?
-        Thread.kill(@sortingThread)
+        @sortingThread.raise("Thread Death")
       end
     end
 
@@ -76,7 +82,7 @@ module Multisort
       # given initial data input, handles thread operations with thread_sort and combine_bucket
       # pre       data
       # post      completed thread operation
-      
+      begin
       while @mainBucket.count != 1
         # Sort sub buckets in main bucket.
         threads = Array.new
@@ -103,6 +109,10 @@ module Multisort
           @threadBuckets.push(@mainBucket.last)
         end
         @mainBucket = @threadBuckets
+      end
+      rescue Exception => e
+        puts "EXCEPTION: #{e.inspect}"
+        puts "MESSAGE: #{e.message}"
       end
     end
 

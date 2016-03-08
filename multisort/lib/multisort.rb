@@ -32,7 +32,7 @@ class MSDriver
     @data_loaded = false
     @data_cleaned = false
     @data_type = nil
-    @time_limit = 500 # arbitrary time limit set to 500s
+    @time_limit = 0 # arbitrary time limit set to 500s
     @size_limit = 25000 # arbitrary size limit set to 25000
     @primitive = false # discern the type of object sorted
   end
