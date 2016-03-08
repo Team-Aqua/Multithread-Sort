@@ -18,9 +18,7 @@ module Multisort
         build_buckets(data)
       else
         @mainBucket = bubble_sort(data)
-        @mainBucket.each do |var|
-            print var
-        end
+        p @mainBucket
         return
       end
       
@@ -35,9 +33,7 @@ module Multisort
         Thread.list.each{|t| Thread.kill(t)}
       end
       
-      @mainBucket.each do |var|
-          print var
-      end
+      p @mainBucket
     end
 
     #Contract MContracts::TimeLimitNotNil => C::None
@@ -60,12 +56,12 @@ module Multisort
       # post      bucket containing data
       dataclone = data.clone
       while dataclone.length > 1 do
-          @mainBucket.push(dataclone.shift(2))
+        @mainBucket.push(dataclone.shift(2))
       end
       
       # Handles the exception if there is an odd number of values in the dataset.
       if dataclone.length == 1
-          @mainBucket.pushArray.new(dataclone.shift)
+        @mainBucket.push(Array.new(1, dataclone.shift))
       end
     end
 
@@ -97,10 +93,12 @@ module Multisort
       
         threads.each(&:join)
         if @mainBucket.count % 2 == 1
-            @threadBuckets.push(@mainBucket.last)
+          @threadBuckets.push(@mainBucket.last)
         end
         @mainBucket = @threadBuckets
       end
+      
+      @mainBucket = @mainBucket.first
     end
 
     #Contract C::Num => C::None
@@ -138,21 +136,21 @@ module Multisort
     
     #Contract C::ArrayOf[C::Num] => C::Any
     def bubble_sort(array)
-        n = array.length
-        loop do
-            swapped = false
+      n = array.length
+      loop do
+        swapped = false
             
-            (n-1).times do |i|
-                if array[i] > array[i+1]
-                    array[i], array[i+1] = array[i+1], array[i]
-                    swapped = true
-                end
-            end
-            
-            break if not swapped
+        (n-1).times do |i|
+          if array[i] > array[i+1]
+            array[i], array[i+1] = array[i+1], array[i]
+            swapped = true
+          end
         end
+            
+        break if not swapped
+      end
 
-        return array
+      return array
     end
     
     #Contract C::ArrayOf[C::Num], C::ArrayOf[C::Num] => C::ArrayOf[C::Num]
