@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'yaml'
 module Multisort
   module Loader
     include Contracts::Core
@@ -31,7 +32,9 @@ module Multisort
         end
         @data_loaded = true
         MContracts::IsPrimitive.valid?(@data.first)
-      elsif (filepath.include? ".json")
+      elsif (filepath.include? ".yml" or filepath.include? ".json")
+        yaml = YAML::load_file(File.open(filepath))
+        @data = YAML::load(yaml)
         @data_loaded = true
       else
         file.close
