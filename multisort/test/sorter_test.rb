@@ -7,31 +7,41 @@ class SorterTest < Minitest::Test
     
   def setup
   end
+
+  def test_sort
+    assert  [1,2] == Multisort.sort([1,2], 20)
+    assert  [10,21,32,4,53,6,71,8,9,10] == Multisort.sort("test/test_files/test_csv.csv", 20)
+    assert  [10.1, 21.2, 32.3, 4.2, 53.3, 6.4, 71.6, 8.8, 9.0, 10.2] == Multisort.sort("test/test_files/test_float_csv.csv", 20)
+    
+    assert [1,2] == Multisort.sort([1,2], 20, threadNum=4)
+    assert [1,2] == Multisort.sort([1,2], 20, outputfile="output.csv")
+    assert [1,2] == Multisort.sort([1,2], 20, threadNum=4, outputfile="output.csv")
+  end
   
   def test_sort_int
-    @ms = Multisort::MSDriver.new
-    @ms.load_from_data([2, 4, 6, 8, 10, 1, 3, 5, 7, 9])
-    assert_equal(true, @ms.data_loaded)
-    @ms.main_sort
-    assert_equal(true, @ms.data == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    # @ms = Multisort::MSDriver.new
+    # @ms.load_from_data([2, 4, 6, 8, 10, 1, 3, 5, 7, 9])
+    # assert_equal(true, @ms.data_loaded)
+    # @ms.main_sort
+    # assert_equal(true, @ms.data == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
-    @ms.load_from_data([10, 1])
-    assert_equal(true, @ms.data_loaded)
-    @ms.main_sort
-    assert_equal(true, @ms.data == [1, 10])
+    # @ms.load_from_data([10, 1])
+    # assert_equal(true, @ms.data_loaded)
+    # @ms.main_sort
+    # assert_equal(true, @ms.data == [1, 10])
 
-    @ms.load_from_data([1])
-    assert_equal(true, @ms.data_loaded)
-    @ms.main_sort
-    assert_equal(true, @ms.data == [1])
+    # @ms.load_from_data([1])
+    # assert_equal(true, @ms.data_loaded)
+    # @ms.main_sort
+    # assert_equal(true, @ms.data == [1])
   end
 
   def test_sort_string
-    @ms = Multisort::MSDriver.new
-    @ms.load_from_data(["Anson", "Quentin", "Aaron"])
-    assert_equal(true, @ms.data_loaded)
-    @ms.main_sort
-    assert_equal(true, @ms.data == ["Aaron", "Anson", "Quentin"])
+    # @ms = Multisort::MSDriver.new
+    # @ms.load_from_data(["Anson", "Quentin", "Aaron"])
+    # assert_equal(true, @ms.data_loaded)
+    # @ms.main_sort
+    # assert_equal(true, @ms.data == ["Aaron", "Anson", "Quentin"])
   end
 
   def test_benchmarks

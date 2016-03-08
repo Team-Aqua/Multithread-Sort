@@ -7,10 +7,23 @@ require "multisort/sorter"
 require "thread"
 
 module Multisort
-  # include Contracts::Core
-  # include Contracts::Invariants
-  # include Multisort::MContracts
-  # include Multisort::Sorter
+  include Loader
+  include Sorter
+
+  def self.sort(input, timer, threadNum= nil, outputfile= nil)
+    data = nil
+    if input.is_a?(Array)
+      # Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Bool
+      data = input
+    elsif input.is_a?(String)
+      data = Multisort::Loader::load_from_file(input)
+    end
+
+
+    # Sorter::main_sort
+    return data
+  end
+
 class MSDriver
   # stores loading and processing operations here
   include Contracts::Core
@@ -26,6 +39,8 @@ class MSDriver
 
   attr_reader :data, :time_limit, :size_limit, :sort_status, :data_loaded, :data_cleaned, :data_type, :primitive
   
+
+
   def initialize()  
     @data = nil
     @sort_status = false
