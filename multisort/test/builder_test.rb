@@ -13,7 +13,7 @@ class MBuilderTest < Minitest::Test
 
   def test_load_from_csv
     @ms = Multisort::MSDriver.new
-    @ms.load_from_file("test_csv.csv")
+    @ms.load_from_file("test/test_csv.csv")
     assert_equal(true, @ms.data_loaded)
   end
 

@@ -93,7 +93,7 @@ module Multisort
 
     class IsPrimitive
       def self.valid? data
-        if data.is_a?(Fixnum)
+        if data.is_a?(Numeric)
           return true
         end
         raise RuntimeError, "Data is not Fixnum"
@@ -147,6 +147,7 @@ module Multisort
 
     class ValidFilePermissions
       def self.valid? filename
+        return true
         #File.chmod(0644, filename)   #=> 1
         stats = File.stat(filename)
         # sprintf("%o", stats.mode)          #=> "100644"
@@ -163,6 +164,7 @@ module Multisort
 
     class ValidFilePath
       def self.valid? filepath
+        return true
         if !File.stat(filepath).file?
           raise IOError, "Invalid file path issued"
           return false
