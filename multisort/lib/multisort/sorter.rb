@@ -6,25 +6,17 @@ module Multisort
     Thread::abort_on_exception = true
 
     def self.main_sort(data, threadNum, timer)
-      puts threadNum
       # delegation and tasks presented here
       $semaphore = Mutex.new
       
       $mainBucket = Array.new()
-      if data.count > 2
+      if data.count > 2#data.count/threadNum).floor-1
         build_buckets(data, threadNum)
       else
-        data = bubble_sort(data)
-        return data
+        return bubble_sort(data)
       end
       
-      # begin
       $sortingThread = Thread.new{thread_handler}
-      # rescue Exception => e
-      #   puts "EXCEPTION: #{e.inspect}"
-      #   puts "MESSAGE: #{e.message}"
-      # end
-      #$sortingThread.abort_on_exception = true
       watchdogThread = Thread.new{watchdog(timer)}
       
       $sortingThread.join
@@ -107,11 +99,11 @@ module Multisort
           end
           $mainBucket = $threadBuckets
         end
-      rescue TypeError.new => e
-        # puts "EXCEPTION: #{e.inspect}"
-        # puts "MESSAGE: #{e.message}"
-        raise RuntimeError.new, "Watchdog expired. Sorting has been terminated"
+        return
+      rescue Exception => e
+        puts "WatchdogExpiredError: Watchdog has elapsed its time."
       end
+      exit
     end
 
     #Contract C::Num => C::None
