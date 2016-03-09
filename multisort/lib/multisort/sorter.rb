@@ -26,12 +26,6 @@ module Multisort
       end
       watchdogThread.join
       
-      # puts $sortingThread.status
-      # if $sortingThread.status ==  "aborting"
-      #     puts "The thread was killed and caught"
-      #     Thread.list.each{|t| Thread.kill(t)}
-      # end
-      
       return $mainBucket.first
     end
 
@@ -53,17 +47,26 @@ module Multisort
       # each initial bucket has 2 data points
       # pre       data loaded
       # post      bucket containing data
-      dataclone = data.clone
-      sizeOfBuckets = (data.count/numThreads).floor
-      while dataclone.length > sizeOfBuckets-1 do
-        $mainBucket.push(dataclone.shift(sizeOfBuckets))
-      end
-      
+      #dataclone = data.clone
+      #sizeOfBuckets = (data.count/numThreads).floor
+      #while dataclone.length > sizeOfBuckets-1 do
+        #$mainBucket.push(dataclone.shift(sizeOfBuckets))
+      #end
+
       # Handles the exception if there is an odd number of values in the dataset.
-      dataclone.each do |val|
-        $mainBucket[numThreads-1].push(val)
+      #dataclone.each do |val|
+        #$mainBucket[numThreads-1].push(val)
+      #end
+
+      dataclone = data.clone
+      while dataclone.length > 1 do
+        $mainBucket.push(dataclone.shift(2))
       end
 
+      # Handles the exception if there is an odd number of values in the dataset.
+      if dataclone.length == 1
+        $mainBucket.push(Array.new(1, dataclone.shift))
+      end
 
     end
 
