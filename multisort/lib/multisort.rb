@@ -9,17 +9,24 @@ require 'facter'
 module Multisort
   include IO
   include Sorter
+  include Contracts::Core
+  C = Contracts
 
   def self.sort(input, timer, threadNum: nil, outputfile: nil)
     data = nil
 
     #Input
     if input.is_a?(Array)
-      # Contract C::And[MContracts::NilArray, MContracts::DataPresent, MContracts::IsComparable, MContracts::ValidArraySize, MContracts::ArrayElementsEqualClass] => C::Bool
+      MContracts::NilArray.valid?(input)
       data = input
     elsif input.is_a?(String)
       data = Multisort::IO::load_from_file(input)
+    else
+      raise RuntimeError.new, "Input invalid must be Array or filename"
     end
+
+    #Timer
+    MContracts::IsTimerNumeric.valid?(timer)
 
     #Threads
     if threadNum == nil 
@@ -28,10 +35,15 @@ module Multisort
         threadNum = 2
       end
     else
+      MContracts::IsThreadNumInteger.valid?(threadNum)
       if threadNum > (data.count/2).floor
         threadNum = (data.count/2).floor
       end
     end
+
+    MContracts::IsComparable.valid?(data)
+    MContracts::ArrayElementsEqualClass.valid?(data)
+
     data = Multisort::Sorter::main_sort(data, threadNum, timer)
 
     #Output

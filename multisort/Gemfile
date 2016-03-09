@@ -4,5 +4,6 @@ source 'https://rubygems.org'
 gem "minitest"
 gem "contracts"
 gem "facter"
+gem "csvlint"
 
 gemspec
